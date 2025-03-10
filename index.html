@@ -21,6 +21,7 @@
         }
         #plot {
             max-width: 100%;
+            display: none; /* Hide the image initially */
         }
     </style>
 </head>
@@ -75,7 +76,11 @@
                     method: 'POST',
                     data: formData,
                     success: function(response) {
-                        $("#plot").attr("src", "data:image/png;base64," + response.plot_url);
+                        $("#plot").attr("src", "data:image/png;base64," + response.plot_url).show();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("AJAX Error: ", status, error);
+                        alert("An error occurred while running the simulation. Please try again.");
                     }
                 });
             });
