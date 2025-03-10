@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microbiome Simulation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .result {
+            margin-top: 30px;
+            text-align: center;
+        }
+        #plot {
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Gut Microbiome Simulation</h1>
+        <form id="simulation-form">
+            <div class="form-group">
+                <label for="num_bacteria">Number of Bacteria:</label>
+                <input type="number" class="form-control" id="num_bacteria" required>
+            </div>
+            <div class="form-group">
+                <label for="num_viruses">Number of Viruses:</label>
+                <input type="number" class="form-control" id="num_viruses" required>
+            </div>
+            <div class="form-group">
+                <label for="num_fungi">Number of Fungi:</label>
+                <input type="number" class="form-control" id="num_fungi" required>
+            </div>
+            <div class="form-group">
+                <label for="num_iterations">Number of Iterations:</label>
+                <input type="number" class="form-control" id="num_iterations" required>
+            </div>
+            <div class="form-group">
+                <label for="healthy_bacteria_ratio">Healthy Bacteria Ratio (0 to 1):</label>
+                <input type="number" step="0.01" class="form-control" id="healthy_bacteria_ratio" value="0.85" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Run Simulation</button>
+        </form>
+        <div class="result">
+            <h2>Simulation Result</h2>
+            <img id="plot" src="" alt="Simulation plot" />
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#simulation-form").submit(function (event) {
+                event.preventDefault();
+
+                const formData = {
+                    num_bacteria: $("#num_bacteria").val(),
+                    num_viruses: $("#num_viruses").val(),
+                    num_fungi: $("#num_fungi").val(),
+                    num_iterations: $("#num_iterations").val(),
+                    healthy_bacteria_ratio: $("#healthy_bacteria_ratio").val(),
+                };
+
+                $.ajax({
+                    url: '/simulate',
+                    method: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        $("#plot").attr("src", "data:image/png;base64," + response.plot_url);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
